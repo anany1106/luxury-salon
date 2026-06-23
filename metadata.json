@@ -1,0 +1,10 @@
+{
+  "name": "Luxury Salon Finder and AI Stylist",
+  "description": "An interactive, curated guide to high-end beauty salons, featuring localized neighbourhood discovery, interactive booking, and a personalized Gemini AI Beauty Concierge.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
