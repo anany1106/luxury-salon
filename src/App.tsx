@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Sparkles, Star, MapPin, Search, Compass, Shield, Award, Calendar, Heart, Eye, Trash2, Download, Phone, User, Clock, CheckCircle, Sun, Moon } from "lucide-react";
+import { Sparkles, Star, MapPin, Search, Compass, Shield, Award, Calendar, Heart, Eye, Trash2, Download, Phone, User, Clock, CheckCircle, Sun, Moon, Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 import { Salon, Neighborhood, Treatment, EditorsPick, Booking } from "./types";
 import { SALONS_DATA, NEIGHBORHOODS_DATA, TREATMENT_CARDS, EDITORS_PICKS } from "./data";
 import MapContainer from "./components/MapContainer";
@@ -95,6 +96,7 @@ const handleSendCalendarInvite = (booking: Booking) => {
 };
 
 export default function App() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     try {
       const stored = localStorage.getItem("aura_theme");
@@ -294,7 +296,7 @@ export default function App() {
         theme === "dark" ? "bg-stone-950/85 border-stone-800/80 text-stone-100" : "bg-white/80 border-stone-200/80 text-stone-800"
       }`}>
         <div className="max-w-7xl mx-auto px-6 h-16 sm:h-20 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-1.5 cursor-pointer" onClick={() => setActiveTab("discovery")}>
+          <div className="flex items-center gap-1.5 cursor-pointer" onClick={() => { setActiveTab("discovery"); setIsMobileMenuOpen(false); }}>
             <span className={`font-serif text-lg sm:text-xl font-semibold tracking-wide transition-colors ${
               theme === "dark" ? "text-stone-100" : "text-stone-900"
             }`}>
@@ -303,11 +305,11 @@ export default function App() {
             <span className="w-1.5 h-1.5 bg-[#a48259] rounded-full self-end mb-2" />
           </div>
 
-          {/* Quick Tab navigations */}
-          <nav className="flex items-center gap-1 sm:gap-2.5">
+          {/* Desktop Tab Navigations - Hidden on screens below lg */}
+          <nav className="hidden lg:flex items-center gap-1 sm:gap-2.5">
             <button
               onClick={() => setActiveTab("discovery")}
-              className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs font-mono tracking-wider transition-all uppercase font-semibold ${
+              className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs font-mono tracking-wider transition-all uppercase font-semibold cursor-pointer ${
                 activeTab === "discovery"
                   ? (theme === "dark" ? "bg-stone-800 border border-stone-700/80 text-[#c5a880] shadow-sm" : "bg-stone-950 text-white shadow-sm")
                   : (theme === "dark" ? "text-stone-400 hover:text-stone-100 hover:bg-stone-900/60" : "text-stone-500 hover:text-stone-900 hover:bg-stone-100/60")
@@ -318,7 +320,7 @@ export default function App() {
             <button
               id="tab-ai-concierge"
               onClick={() => setActiveTab("concierge")}
-              className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs font-mono tracking-wider transition-all uppercase font-semibold flex items-center gap-1 ${
+              className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs font-mono tracking-wider transition-all uppercase font-semibold flex items-center gap-1 cursor-pointer ${
                 activeTab === "concierge"
                   ? (theme === "dark" ? "bg-stone-800 border border-stone-700/80 text-[#c5a880] shadow-sm" : "bg-stone-950 text-white shadow-sm")
                   : (theme === "dark" ? "text-stone-400 hover:text-stone-100 hover:bg-stone-900/60" : "text-stone-500 hover:text-stone-900 hover:bg-stone-100/60")
@@ -329,7 +331,7 @@ export default function App() {
             <button
               id="tab-aura-quiz"
               onClick={() => setActiveTab("quiz")}
-              className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs font-mono tracking-wider transition-all uppercase font-semibold flex items-center gap-1 ${
+              className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs font-mono tracking-wider transition-all uppercase font-semibold flex items-center gap-1 cursor-pointer ${
                 activeTab === "quiz"
                   ? (theme === "dark" ? "bg-stone-800 border border-stone-700/80 text-[#c5a880] shadow-sm" : "bg-stone-950 text-white shadow-sm")
                   : (theme === "dark" ? "text-stone-400 hover:text-stone-100 hover:bg-stone-900/60" : "text-stone-500 hover:text-stone-900 hover:bg-stone-100/60")
@@ -340,7 +342,7 @@ export default function App() {
             <button
               id="tab-diagnostic-camera"
               onClick={() => setActiveTab("vision")}
-              className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs font-mono tracking-wider transition-all uppercase font-semibold flex items-center gap-1 ${
+              className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs font-mono tracking-wider transition-all uppercase font-semibold flex items-center gap-1 cursor-pointer ${
                 activeTab === "vision"
                   ? (theme === "dark" ? "bg-stone-800 border border-stone-700/80 text-[#c5a880] shadow-sm" : "bg-stone-950 text-white shadow-sm")
                   : (theme === "dark" ? "text-stone-400 hover:text-stone-100 hover:bg-stone-900/60" : "text-stone-500 hover:text-stone-900 hover:bg-stone-100/60")
@@ -351,7 +353,7 @@ export default function App() {
             <button
               id="tab-wishlist"
               onClick={() => setActiveTab("wishlist")}
-              className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs font-mono tracking-wider transition-all uppercase font-semibold flex items-center gap-1 ${
+              className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs font-mono tracking-wider transition-all uppercase font-semibold flex items-center gap-1 cursor-pointer ${
                 activeTab === "wishlist"
                   ? (theme === "dark" ? "bg-stone-800 border border-stone-700/80 text-[#c5a880] shadow-sm" : "bg-stone-950 text-white shadow-sm")
                   : (theme === "dark" ? "text-stone-400 hover:text-stone-100 hover:bg-stone-900/60" : "text-stone-500 hover:text-stone-900 hover:bg-stone-100/60")
@@ -368,7 +370,7 @@ export default function App() {
             <button
               id="tab-my-appointments"
               onClick={() => setActiveTab("appointments")}
-              className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs font-mono tracking-wider transition-all uppercase font-semibold flex items-center gap-1 core-appointments-btn ${
+              className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs font-mono tracking-wider transition-all uppercase font-semibold flex items-center gap-1 core-appointments-btn cursor-pointer ${
                 activeTab === "appointments"
                   ? (theme === "dark" ? "bg-stone-800 border border-stone-700/80 text-[#c5a880] shadow-sm" : "bg-stone-950 text-white shadow-sm")
                   : (theme === "dark" ? "text-stone-400 hover:text-stone-100 hover:bg-stone-900/60" : "text-stone-500 hover:text-stone-900 hover:bg-stone-100/60")
@@ -401,7 +403,175 @@ export default function App() {
               )}
             </button>
           </nav>
+
+          {/* Mobile Actions and Hamburger Menu Button - Visible on screens below lg */}
+          <div className="flex lg:hidden items-center gap-2">
+            {/* Gilded Theme Toggle Trigger for Mobile */}
+            <button
+              id="theme-toggle-btn-mobile"
+              onClick={toggleTheme}
+              className={`p-2 rounded-lg border text-xs transition-all duration-300 flex items-center justify-center cursor-pointer h-8 w-8 ${
+                theme === "dark"
+                  ? "bg-stone-900 border-stone-850 text-amber-400"
+                  : "bg-stone-100 border-stone-200 text-stone-600"
+              }`}
+              title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            >
+              {theme === "dark" ? (
+                <Sun className="w-3.5 h-3.5 fill-amber-400/20" />
+              ) : (
+                <Moon className="w-3.5 h-3.5 fill-stone-600/10" />
+              )}
+            </button>
+
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className={`p-2 rounded-lg border transition-all duration-300 flex items-center justify-center cursor-pointer h-8 w-8 ${
+                theme === "dark"
+                  ? "bg-stone-900 border-stone-850 text-stone-200 hover:bg-stone-800"
+                  : "bg-stone-150 border-stone-200 text-stone-700 hover:bg-stone-200"
+              }`}
+              aria-label="Toggle Menu"
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-4 h-4" />
+              ) : (
+                <Menu className="w-4 h-4" />
+              )}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile Expandable Drawer Menu Section with smooth framer-motion */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+              className={`lg:hidden border-t overflow-hidden backdrop-blur-lg ${
+                theme === "dark" ? "bg-stone-950/95 border-stone-800 text-stone-100" : "bg-white/95 border-stone-200 text-stone-800"
+              }`}
+            >
+              <nav className="px-6 py-4 flex flex-col gap-2">
+                <button
+                  onClick={() => {
+                    setActiveTab("discovery");
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`w-full py-2.5 px-4 rounded-xl text-xs font-mono tracking-wider transition-all uppercase font-semibold text-left flex items-center justify-between cursor-pointer ${
+                    activeTab === "discovery"
+                      ? (theme === "dark" ? "bg-stone-800 text-[#c5a880] border border-stone-700/80" : "bg-stone-950 text-white")
+                      : (theme === "dark" ? "text-stone-300 hover:bg-stone-900" : "text-stone-600 hover:bg-stone-100")
+                  }`}
+                >
+                  <span>Discover</span>
+                  <span className="text-[10px] opacity-60">Directory</span>
+                </button>
+                <button
+                  id="tab-ai-concierge-mobile"
+                  onClick={() => {
+                    setActiveTab("concierge");
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`w-full py-2.5 px-4 rounded-xl text-xs font-mono tracking-wider transition-all uppercase font-semibold text-left flex items-center justify-between cursor-pointer ${
+                    activeTab === "concierge"
+                      ? (theme === "dark" ? "bg-stone-800 text-[#c5a880] border border-stone-700/80" : "bg-stone-950 text-white")
+                      : (theme === "dark" ? "text-stone-300 hover:bg-stone-900" : "text-stone-600 hover:bg-stone-100")
+                  }`}
+                >
+                  <span className="flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-[#c5a880] fill-current" /> AI Concierge
+                  </span>
+                  <span className="text-[10px] opacity-60">Consultant</span>
+                </button>
+                <button
+                  id="tab-aura-quiz-mobile"
+                  onClick={() => {
+                    setActiveTab("quiz");
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`w-full py-2.5 px-4 rounded-xl text-xs font-mono tracking-wider transition-all uppercase font-semibold text-left flex items-center justify-between cursor-pointer ${
+                    activeTab === "quiz"
+                      ? (theme === "dark" ? "bg-stone-800 text-[#c5a880] border border-stone-700/80" : "bg-stone-950 text-white")
+                      : (theme === "dark" ? "text-stone-300 hover:bg-stone-900" : "text-stone-600 hover:bg-stone-100")
+                  }`}
+                >
+                  <span className="flex items-center gap-1.5">
+                    <Compass className="w-3.5 h-3.5 text-[#c5a880]" /> Aura Quiz
+                  </span>
+                  <span className="text-[10px] opacity-60">Diagnostic</span>
+                </button>
+                <button
+                  id="tab-diagnostic-camera-mobile"
+                  onClick={() => {
+                    setActiveTab("vision");
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`w-full py-2.5 px-4 rounded-xl text-xs font-mono tracking-wider transition-all uppercase font-semibold text-left flex items-center justify-between cursor-pointer ${
+                    activeTab === "vision"
+                      ? (theme === "dark" ? "bg-stone-800 text-[#c5a880] border border-stone-700/80" : "bg-stone-950 text-white")
+                      : (theme === "dark" ? "text-stone-300 hover:bg-stone-900" : "text-stone-600 hover:bg-stone-100")
+                  }`}
+                >
+                  <span className="flex items-center gap-1.5">
+                    <Eye className="w-3.5 h-3.5 text-[#c5a880]" /> Symmetry Vision
+                  </span>
+                  <span className="text-[10px] opacity-60">Symmetry Scan</span>
+                </button>
+                <button
+                  id="tab-wishlist-mobile"
+                  onClick={() => {
+                    setActiveTab("wishlist");
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`w-full py-2.5 px-4 rounded-xl text-xs font-mono tracking-wider transition-all uppercase font-semibold text-left flex items-center justify-between cursor-pointer ${
+                    activeTab === "wishlist"
+                      ? (theme === "dark" ? "bg-stone-800 text-[#c5a880] border border-stone-700/80" : "bg-stone-950 text-white")
+                      : (theme === "dark" ? "text-stone-300 hover:bg-stone-900" : "text-stone-600 hover:bg-stone-100")
+                  }`}
+                >
+                  <span className="flex items-center gap-1.5">
+                    <Heart className={`w-3.5 h-3.5 ${activeTab === "wishlist" ? "text-rose-500 fill-rose-500" : "text-stone-400"}`} />
+                    Wishlist
+                  </span>
+                  {wishlist.length > 0 ? (
+                    <span className="bg-[#a48259] text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
+                      {wishlist.length}
+                    </span>
+                  ) : (
+                    <span className="text-[10px] opacity-60">0 items</span>
+                  )}
+                </button>
+                <button
+                  id="tab-my-appointments-mobile"
+                  onClick={() => {
+                    setActiveTab("appointments");
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`w-full py-2.5 px-4 rounded-xl text-xs font-mono tracking-wider transition-all uppercase font-semibold text-left flex items-center justify-between cursor-pointer ${
+                    activeTab === "appointments"
+                      ? (theme === "dark" ? "bg-stone-800 text-[#c5a880] border border-stone-700/80" : "bg-stone-950 text-white")
+                      : (theme === "dark" ? "text-stone-300 hover:bg-stone-900" : "text-stone-600 hover:bg-stone-100")
+                  }`}
+                >
+                  <span className="flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5 text-[#c5a880]" />
+                    My Appointments
+                  </span>
+                  {bookings.length > 0 ? (
+                    <span className="bg-[#a48259] text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
+                      {bookings.length}
+                    </span>
+                  ) : (
+                    <span className="text-[10px] opacity-60">Empty</span>
+                  )}
+                </button>
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* Main Container */}
